@@ -12,11 +12,11 @@ struct Product {
 };
 
 struct Product prd[MAX] = {
-    {"P001", "Gao ST25", "Kg", 100},
-    {"P002", "Duong Cat Trang", "Kg", 50},
-    {"P003", "Sua Tuoi Vinamilk", "Hop", 200},
-    {"P004", "Mi Tom Hao Hao", "Thung", 30},
-    {"P005", "Nuoc Ngot Pepsi", "Chai", 120}
+    {"P001", "Gao ST25", "Kg", 100, 1},
+    {"P002", "Duong Cat Trang", "Kg", 50, 1},
+    {"P003", "Sua Tuoi Vinamilk", "Hop", 200, 1},
+    {"P004", "Mi Tom Hao Hao", "Thung", 30, 1},
+    {"P005", "Nuoc Ngot Pepsi", "Chai", 120, 1}
 };
 
 
@@ -30,7 +30,7 @@ struct Transaction {
 void addProduct();
 void updateProduct();
 void statusProduct();
-void searchProduct();
+void findProduct();
 void listProduct();
 void sortProduct();
 void transaction();
@@ -73,11 +73,11 @@ int main(){
 	            break;
 	
 	        case 3:
-	            
+	            statusProduct();
 	            break;
 	
 	        case 4:
-	            
+	            findProduct();
 	            break;
 	
 	        case 5:
@@ -126,7 +126,7 @@ void addProduct() {
         int flag = 0;
         for (int i = 0; i < size; i++) {
             if (strcmp(newPrd.productID, prd[i].productID) == 0) {
-                printf("Ma san pham bi trung! Nhap lai.\n");
+                printf("Ma san pham bi trung!\n");
                 flag = 1;
                 break;
             }
@@ -171,7 +171,7 @@ void addProduct() {
 	    }
 	
 	    if (hasDigit) {
-	        printf("Don vi khong duoc chua so! Nhap lai.\n");
+	        printf("Don vi khong duoc chua so!\n");
 	        continue;
 	    }
 	
@@ -202,7 +202,6 @@ void addProduct() {
 
     printf("\nTHEM MOI THANH CONG!\n");
 }
-
 
 
 void updateProduct(){
@@ -298,4 +297,57 @@ void updateProduct(){
 }
 
 
- 
+void statusProduct() {
+	
+    char id[10];
+    printf("Nhap ma vat tu can doi trang thai: ");
+    fgets(id, sizeof(id), stdin);
+    id[strcspn(id, "\n")] = 0;
+
+    int index = -1;
+    for (int i = 0; i < size; i++) {
+        if (strcmp(id, prd[i].productID) == 0) {
+            index = i;
+            break;
+        }
+    }
+
+    if (index == -1) {
+        printf("Vat tu %s khong ton tai!\n", id);
+        return;
+    }
+
+
+    prd[index].status = !prd[index].status;
+
+    printf("Da doi trang thai cua %s hang hoa thanh cong\n",prd[index].productID);
+}
+
+
+void findProduct() {
+	char find[100];
+	printf("Ma hang hoa hoac ten can tim kiem: ");
+	fgets(find, 100, stdin);
+	find[strcspn(find, "\n")] = 0;
+
+	int found = 0;
+	
+	for(int i = 0;i < size; i++){
+		if(strcmp(prd[i].productID, find) == 0 || strstr(prd[i].name, find) != NULL){
+			found++;
+			printf("\n    Tim thay hang hoa    \n");
+            printf("ID: %s\n", prd[i].productID);
+            printf("Ten: %s\n", prd[i].name);
+            printf("Don vi: %s\n", prd[i].unit);
+            printf("So luong: %d\n", prd[i].qty);
+            printf("Trang thai: %s\n", prd[i].status ? "Dang KD" : "Ngung KD");
+		}
+	}
+	
+	if (found == 0) {
+        printf("\nKhong tim thay hang hoa!\n");
+    } else {
+        printf("\nTim thay tong cong %d hang hoa phu hop.\n", found);
+    }		
+}
+
