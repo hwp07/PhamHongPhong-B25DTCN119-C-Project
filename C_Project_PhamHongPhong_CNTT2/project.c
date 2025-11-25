@@ -298,7 +298,6 @@ void updateProduct(){
 
 
 void statusProduct() {
-	
     char id[10];
     printf("Nhap ma vat tu can doi trang thai: ");
     fgets(id, sizeof(id), stdin);
@@ -317,37 +316,59 @@ void statusProduct() {
         return;
     }
 
+    if (prd[index].status == 0) {
+        printf("Hang hoa %s dang o trang thai NGUNG KINH DOANH!\n", id);
+        printf("Khong the doi trang thai!\n");
+        return;
+    }
 
-    prd[index].status = !prd[index].status;
+    prd[index].status = 0;
 
-    printf("Da doi trang thai cua %s hang hoa thanh cong\n",prd[index].productID);
+    printf("Da doi trang thai cua %s sang NGUNG KINH DOANH.\n", prd[index].productID);
 }
 
 
 void findProduct() {
-	char find[100];
-	printf("Ma hang hoa hoac ten can tim kiem: ");
-	fgets(find, 100, stdin);
-	find[strcspn(find, "\n")] = 0;
+    char find[100];
+    printf("Ma hang hoa hoac ten can tim kiem: ");
+    fgets(find, 100, stdin);
+    find[strcspn(find, "\n")] = 0;
 
-	int found = 0;
-	
-	for(int i = 0;i < size; i++){
-		if(strcmp(prd[i].productID, find) == 0 || strstr(prd[i].name, find) != NULL){
-			found++;
-			printf("\n    Tim thay hang hoa    \n");
+    char findLower[100];
+    strcpy(findLower, find);
+
+    for (int i = 0; findLower[i] != '\0'; i++) {
+        findLower[i] = tolower(findLower[i]);
+    }
+
+    int found = 0;
+
+    for (int i = 0; i < size; i++) {
+        char nameLower[50];
+        strcpy(nameLower, prd[i].name);
+
+        for (int k = 0; nameLower[k] != '\0'; k++) {
+            nameLower[k] = tolower(nameLower[k]);
+        }
+
+        if (strcmp(prd[i].productID, find) == 0 ||
+            strstr(nameLower, findLower) != NULL) {
+
+            found++;
+            printf("\nTim thay hang hoa:\n");
             printf("ID: %s\n", prd[i].productID);
             printf("Ten: %s\n", prd[i].name);
             printf("Don vi: %s\n", prd[i].unit);
             printf("So luong: %d\n", prd[i].qty);
-            printf("Trang thai: %s\n", prd[i].status ? "Dang KD" : "Ngung KD");
-		}
-	}
-	
-	if (found == 0) {
+        }
+    }
+
+    if (found == 0) {
         printf("\nKhong tim thay hang hoa!\n");
     } else {
-        printf("\nTim thay tong cong %d hang hoa phu hop.\n", found);
-    }		
+        printf("\nTim thay %d ket qua.\n", found);
+    }
 }
+
+
 
