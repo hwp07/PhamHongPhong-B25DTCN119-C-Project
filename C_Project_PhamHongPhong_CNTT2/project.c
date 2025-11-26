@@ -16,7 +16,30 @@ struct Product prd[MAX] = {
     {"P002", "Duong Cat Trang", "Kg", 50, 1},
     {"P003", "Sua Tuoi Vinamilk", "Hop", 200, 1},
     {"P004", "Mi Tom Hao Hao", "Thung", 30, 1},
-    {"P005", "Nuoc Ngot Pepsi", "Chai", 120, 1}
+    {"P005", "Nuoc Ngot Pepsi", "Chai", 120, 1},
+    {"P006", "Dau An Tuong An", "Chai", 80, 1},
+	{"P007", "Bot Ngot Ajinomoto", "Goi", 150, 1},
+	{"P008", "Nuoc Mam Nam Ngu", "Chai", 60, 1},
+	{"P009", "Tra Xanh 0 Do", "Chai", 90, 1},
+	{"P010", "Sua Ong Tho", "Lon", 70, 1},
+	{"P011", "Banh Quy OREO", "Hop", 40, 1},
+	{"P012", "Keo Deo Alpenliebe", "Goi", 55, 1},
+	{"P013", "Ca Phe Trung Nguyen", "Goi", 110, 1},
+	{"P014", "Gao Jasmine", "Kg", 300, 1},
+	{"P015", "Duong Den Huu Co", "Kg", 45, 1},
+	{"P016", "Nuoc Loc Lavie", "Thung", 25, 1},
+	{"P017", "Nuoc Ep Cam Twister", "Chai", 65, 1},
+	{"P018", "Thung Bia Saigon", "Thung", 18, 1},
+	{"P019", "Thung Bia Heineken", "Thung", 15, 1},
+	{"P020", "Cha Lua Vissan", "Kg", 35, 1},
+	{"P021", "Xuc Xich Duc Viet", "Goi", 50, 1},
+	{"P022", "Banh Mi Tuoi", "Cai", 120, 1},
+	{"P023", "Dau Phu Trang", "Mieng", 200, 1},
+	{"P024", "Trung Ga CP", "Khay", 30, 1},
+	{"P025", "Hat Dieu Rang Muoi", "Goi", 75, 1}
+
+    
+    
 };
 
 
@@ -37,7 +60,7 @@ void transaction();
 void showHistory();
 
 
-int size = 5;
+int size = 25;
 
 
 int main(){
@@ -81,11 +104,11 @@ int main(){
 	            break;
 	
 	        case 5:
-	            
+	            listProduct();
 	            break;
 	
 	        case 6:
-	            
+	            sortProduct();
 	            break;
 	
 	        case 7:
@@ -369,6 +392,76 @@ void findProduct() {
         printf("\nTim thay %d ket qua.\n", found);
     }
 }
+
+void listProduct() {
+    int page_number = 1;
+    int page_size =10;
+    // Tính t?ng s? trang
+    int kq = size/page_size;
+    int total_pages = (size % page_size == 0)? kq : kq+1;
+
+   while (1) {
+       printf("Moi ban chon so trang can xem (1-%d) : ", total_pages);
+       scanf("%d", &page_number);
+
+       // kiem tra dieu kien
+
+       // Tính v? tri bat dau v ket thu
+       int start = (page_number-1)*page_size;
+       int end = start + page_size;
+       printf("Trang %d/%d :\n\n", page_number, total_pages); // trang 1/5
+       printf("+-----+------------------------------+----------+----------+----------+\n");
+       printf("|%-5s|%-30s|%-10s|%-10s|%-10s|\n", "ID", "Ten Hang hoa","Don vi","So luong","Trang thai");
+       printf("+-----+------------------------------+----------+----------+----------+\n");
+       for (int i = start; i < end && i < size; i++) {
+           printf("|%-5s|%-30s|%-10s|%-10d|%-10d|\n", prd[i].productID, prd[i].name, prd[i].unit, prd[i].qty, prd[i].status);
+       }
+       printf("+-----+------------------------------+----------+----------+----------+\n");
+        fflush(stdin);
+       printf("Ban co muon thoat hay ko ? (y/n)");
+       char ch = getchar();
+       if (ch == 'y' || ch == 'Y') {
+           break;
+       }
+   }
+
+};
+
+void sortProduct(){
+	int choice;
+	printf("	1. Xap xep theo ten.\n");
+	printf("	2. Xap xep theo so luong.\n");
+	printf("Nhap lua chon cua ban: ");
+	scanf("%d",&choice);
+	
+	if(choice == 2){
+		for(int i = 0; i < size;i++){
+			for(int j = 0;j < size - 1 - i;j++){
+				if(prd[j].qty < prd[j+1].qty){
+					int temp = prd[j].qty;
+					prd[j].qty = prd[j+1].qty;
+					prd[j+1].qty = temp;
+				}
+			}
+		}
+	}
+	
+	if(choice == 1){
+		for(int i = 0; i < size;i++){
+			for(int j = 0;j < size - 1 - i;j++){
+				if(strcmp(prd[j].name, prd[j+1].name) > 0){
+					struct Product temp = prd[j];
+					prd[j] = prd[j+1];
+					prd[j+1] = temp;
+				}
+			}
+		}
+	}
+	
+	listProduct();
+
+}
+
 
 
 
