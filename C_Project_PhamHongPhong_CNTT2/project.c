@@ -25,7 +25,7 @@ struct Transaction {
 
 struct Product prd[MAX_PRODUCTS] = {
     {"P001", "Gao ST25", "Kg", 100, 1},
-    {"P002", "Duong Cat Trang", "Kg", 50, 1},
+    {"P002", "Duong Cat Trang", "Kg", 50, 0},
     {"P003", "Sua Tuoi Vinamilk", "Hop", 200, 1},
     {"P004", "Mi Tom Hao Hao", "Thung", 30, 1},
     {"P005", "Nuoc Ngot Pepsi", "Chai", 120, 1},
@@ -64,6 +64,10 @@ void listProducts();
 void sortProducts();
 void transaction();
 void showHistory();
+void setDate(char *time, int day, int month, int year) {
+    sprintf(time, "%02d/%02d/%04d", day, month, year);
+}
+
 
 
 int main() {
@@ -364,7 +368,6 @@ void findProduct() {
 	           printf("|%-5s|%-30s|%-10s|%-10d|%-10d|\n", prd[i].productID, prd[i].name, prd[i].unit, prd[i].qty, prd[i].status);
 	       }
 	       printf("+-----+------------------------------+----------+----------+----------+\n");
-	        fflush(stdin);
         }
     }
 
@@ -372,7 +375,7 @@ void findProduct() {
         printf("Khong tim thay san pham!\n");
     }
 }
-
+                                                                                                                                                                                                                                                                                                                
 // ------------------- Hien thi danh sach (phan trang) -------------------
 void listProducts() {
     int page_size = 10;
@@ -498,31 +501,45 @@ void transaction() {
     }
 
     // Nhap so luong
-    while (1) {
-        if (choice == 1)
+	while (1) {
+    switch (choice) {
+        case 1:
             printf("So luong nhap: ");
-        else
+            break;
+
+        case 2:
+            if (prd[index].status == 0) {
+                printf("Mat hang da ngung kinh doanh!");
+            	return; 
+            }
             printf("So luong xuat: ");
+            break;
 
-        if (scanf("%d", &qty) != 1) {
-            printf("Vui long nhap so nguyen!\n");
-            while (getchar() != '\n');
-            continue;
-        }
-        getchar();
-
-        if (qty <= 0) {
-            printf("So luong phai > 0!\n");
-            continue;
-        }
-
-        if (choice == 2 && qty > prd[index].qty) {
-            printf("So luong xuat lon hon so luong hien co!\n");
-            continue;
-        }
-
-        break;
+        default:
+            printf("Lua chon khong hop le!\n");
+            return;
     }
+
+    if (scanf("%d", &qty) != 1) {
+        printf("Vui long nhap so nguyen!\n");
+        while (getchar() != '\n'); // xóa buffer
+        continue;
+    }
+    getchar(); // xóa ky tu xuong dong con lai 
+
+    if (qty <= 0) {
+        printf("So luong phai > 0!\n");
+        continue;
+    }
+
+    if (choice == 2 && qty > prd[index].qty) {
+        printf("So luong xuat lon hon so luong hien co!\n");
+        continue;
+    }
+
+    break; // thoat vong lap 
+}
+
 
     // Thuc hien giao dich
     if (choice == 1) {
@@ -543,14 +560,7 @@ void transaction() {
 		    strcpy(history[count].type, "OUT");
 		}
 
-
-		time_t t = time(NULL);
-		struct tm currentTime = localtime(&t)[0];
-
-		sprintf(history[count].date, "%02d/%02d/%04d",
-		        currentTime.tm_mday,
-		        currentTime.tm_mon + 1,
-		        currentTime.tm_year + 1900);
+		setDate(history[count].date, 01, 12, 2025);
 
 		
 		history[count].qty = qty;
