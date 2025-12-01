@@ -203,20 +203,29 @@ void addProduct() {
     }
 
     // Nhap so luong
+    char temp[50];
     while (1) {
+    	int num;
         printf("Nhap so luong: ");
-        if (scanf("%d", &newPrd.qty) != 1) {
-            printf("Vui long nhap so!\n");
-            while (getchar() != '\n');
-            continue;
-        }
-        getchar();
+        fgets(temp, 50, stdin);
+        temp[strcspn(temp, "\n")] = 0;
 
-        if (newPrd.qty <= 0) {
-            printf("So luong phai > 0!\n");
-            continue;
-        }
+	if(strlen(temp) == 0){
+		printf("Khong duoc de trong so luong!\n");
+		continue;
+	}
+		
+    if (sscanf(temp, "%d", &num) != 1) {
+        printf("So luong phai la so nguyen!\n");
+        continue;
+    }
 
+    if (num < 0) { 
+        printf("So luong phai >= 0!\n");
+        continue;
+    }
+    
+    	newPrd.qty = num;
         break;
     }
 
@@ -522,7 +531,7 @@ void transaction() {
 
     if (scanf("%d", &qty) != 1) {
         printf("Vui long nhap so nguyen!\n");
-        while (getchar() != '\n'); // xóa buffer
+        while (getchar() != '\n'); 
         continue;
     }
     getchar(); // xóa ky tu xuong dong con lai 
@@ -537,7 +546,7 @@ void transaction() {
         continue;
     }
 
-    break; // thoat vong lap 
+    break;
 }
 
 
